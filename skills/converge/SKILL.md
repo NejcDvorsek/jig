@@ -41,14 +41,15 @@ re-check), then `docs/blueprint/record.md`.
 no focus or baseline (so `scope: review`).
 
 **C. Triage.** Follow `docs/blueprint/triage.md` (loop mode) to update the register. Count the **open
-criticals**, meaning critical rows with status `open` or `fix`.
+criticals**, meaning critical rows with status `open` or `fix`, and the **unverified hard checks**,
+meaning `needs-engineer` rows from a `checkable: false` flag on a hard CON or a REQ.
 
 **D. Decide.**
 
 | Condition | Result |
 |---|---|
-| open criticals = 0 and no critic failed | **converged** |
-| every remaining critical is `needs-engineer` | **stopped: needs engineer** |
+| open criticals = 0, unverified hard checks = 0, and no critic failed | **converged** |
+| every remaining critical is `needs-engineer`, or only unverified hard checks remain | **stopped: needs engineer** |
 | the same open-critical fingerprints after two passes in a row | **stopped: no progress** |
 | a CAD write failed in two consecutive passes, or the connector is gone | **stopped: CAD error** |
 | the same critic failed twice in a row | **stopped: critic failed** |
@@ -67,8 +68,9 @@ otherwise restore that pass's checkpoint and log why.
 2. Write `blueprint/<slug>/redlines/summary.md`: C/W/I per persona per iteration, the open flags,
    the deferred list with rationale, and the engineer questions.
 3. Report in under 20 lines: the outcome and reason, iterations used, the final key parameters and
-   requirement status, what still needs the engineer (questions, deferred warnings worth a look, gaps
-   no critic could check), and how to steer: edit `blueprint.md` (values, `locked: yes`, set
+   requirement status, what still needs the engineer (questions, including each unverified hard
+   check and how to confirm it, deferred warnings worth a look, other gaps no critic could check),
+   and how to steer: edit `blueprint.md` (values, `locked: yes`, set
    register rows to `overridden`, answer §10), then run converge again.
 
 ## Guardrails

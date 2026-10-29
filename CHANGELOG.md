@@ -14,6 +14,11 @@
   direction, so DFM can tell vertical pocket corners from floor edges. `mates` is `{count, broken}`.
   `draft_check` gains `faces` and `undercut_faces`. The snapshot carries `source`
   (`model_read` | `derived`). The bracket fixture is updated.
+- **Unverified hard checks need the engineer.** A critic that can't run a check guarding a hard
+  constraint or a requirement names its id in the flag's `requirement`. Triage turns that into
+  `needs-engineer` with a blocking §10 question and marks the REQ `unverifiable`, the orchestrator
+  shows it under *Couldn't check*, and converge no longer reports **converged** while one is open.
+  An answer in §10 closes it as `overridden`.
 - The SolidWorks server is pinned exactly (`sw-mcp==0.1.0`) instead of a range. A server update
   now ships as a Jig release. `CONNECTOR.md` now describes only the pinned server: the
   base/drawings generations, the older tool names and the conventions repeated from

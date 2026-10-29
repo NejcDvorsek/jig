@@ -103,7 +103,11 @@ key.
 - **info**: a suggestion, an observation, or a check that could not be run (`checkable: false`).
 
 Never mark a flag critical on a guess. If the data is missing, it is `info` with `checkable: false`,
-and the gap is named, so the loop does not stall on things nobody can measure.
+and the gap is named, so the loop does not stall on things nobody can measure. If the check you
+couldn't run guards a **hard constraint or a requirement** (a CON with `kind: hard`, any REQ), put
+its id in `requirement`. That is how Triage knows the gap needs the engineer, not just a log line.
+A low-confidence reading (`confidence: low` in the snapshot) that would make a flag critical counts
+the same: report it as `info`, `checkable: false`, with the requirement id, and say what was unsure.
 
 Keep `flags` to what is worth an engineer's time: about 12 at most, or about 5 with a focus. Put the
 most severe first, and merge repeats (four identical holes are one flag with the count in
