@@ -78,8 +78,10 @@ still verified and logged), and "full review" adds the baseline and every possib
 | "… review: assembly only" | exactly the critics you name |
 | "it's a one-off prototype" / "we need 200 a year" | recorded as the quantity. Cost runs only with a cost target or a quantity above 5 |
 
-The review snapshot reuses what the edit already measured, so only the missing parts are read
-again. Each topic has one owning critic (`docs/critic-protocol.md`), so a problem is reported once.
+The snapshot reads only the sections the chosen critics need. With a server that has `read_model`
+(sw-mcp 0.2.0 or later) that is one call, and holes, concave edges, walls and setups come from the
+SolidWorks API rather than being guessed from faces. Older servers fall back to a slower recipe.
+Each topic has one owning critic (`docs/critic-protocol.md`), so a problem is reported once.
 The snapshot agent and the Cost, Drawing and Standards critics run on Sonnet. DFM and Assembly use
 your session's model. Change a critic's `model:` line in `agents/` to adjust this.
 

@@ -18,11 +18,8 @@ are relative to the plugin root.
 ## Steps
 
 1. **Snapshot** to `blueprint/<slug>/snapshots/<tag>.json`. Sections are the union of
-   `docs/impact-map.md` §3 for the personas (all of them with `full`).
-   - If Edit left a seed `snapshots/NN-edit.json` that holds every needed section, write it out as
-     the snapshot yourself (`partial`, `sections`, `focus`, `seeded_from`) and spawn nothing.
-   - Otherwise spawn `cad-snapshot` with `blueprint`, `out`, `sections`, `focus`, and `seed` if one
-     exists: it reads only what the seed lacks. On `ERROR`, stop and report.
+   `docs/impact-map.md` §3 for the personas (all of them with `full`). Spawn `cad-snapshot` with
+   `blueprint`, `out`, `sections` and `focus`. On `ERROR`, stop and report.
 2. **Critics.** Spawn them all **in one message, in parallel** (`jig:redline-<persona>`), each with
    only:
    ```

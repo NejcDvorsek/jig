@@ -41,6 +41,7 @@ operation (e.g. a new `read_drawing_annotations`) may be used. Record that in th
 |---|---|
 | `status` | CAD product + version, connector/server version, active document |
 | `documents` | open documents (part / assembly / drawing, path) |
+| `model_read` | *optional, preferred.* The snapshot's model sections in **one call**, derived on the server: core, material, holes, radii, setups, walls, draft (and assembly, where supported). See below |
 | `features` | feature tree in order: name, type, suppressed, rebuild error |
 | `dimensions` | driving dimensions: id, feature, value, unit, tolerance if known |
 | `equations` | global variables / equations |
@@ -60,6 +61,23 @@ operation (e.g. a new `read_drawing_annotations`) may be used. Record that in th
 | `drawing` | drawing sheets, views, title block |
 | `screenshot` | image of the model from a named view |
 | `export` | STEP / STL / PDF etc. to a path |
+
+### `model_read`
+
+The snapshot is the step most likely to go wrong when an agent derives holes, edges and setups
+from raw faces over dozens of calls. A connector whose server can do it in one call, from the CAD
+API, offers `model_read`:
+
+- It takes the snapshot sections it should read (`core` always), plus the wall threshold and the
+  pull direction when `walls` / `draft` are asked for.
+- It returns the section fields of `snapshot-schema.md`, or fields the adapter maps onto them
+  one to one, plus its own `gaps`.
+- It is read-only and deterministic: the same model gives the same result.
+
+The adapter says which sections the live server covers. The snapshot agent uses `model_read` for
+those, and the adapter's fallback recipe (from `faces`, `edges`, `wall_thickness` …) only for the
+rest, or for builds without it. Drawings and images stay separate operations: they open documents
+and write files.
 
 ### Write
 | Operation | Effect |
@@ -106,7 +124,8 @@ operation (e.g. a new `read_drawing_annotations`) may be used. Record that in th
 1. Ship or point to its MCP server: add an entry to `.mcp.json` (or have users register it).
 2. Write `connectors/<name>/CONNECTOR.md` using `connectors/solidworks/CONNECTOR.md` as the template:
    status tool, how to start the CAD program, an operation table with support levels, conventions
-   (units, axes, face naming), and known pitfalls.
+   (units, axes, face naming), and known pitfalls. Map `model_read` if the server has it, and give
+   a fallback recipe for the snapshot fields it doesn't cover.
 3. Run `/jig:doctor` and `/jig:snapshot` on a known part, and check the
    snapshot against values read by hand in the CAD program.
 

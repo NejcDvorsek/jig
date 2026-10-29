@@ -22,7 +22,8 @@ mating bolt patterns, datums, envelope (CON). Assembly-only checks then become `
 - `assembly.clearance`: moving or neighbouring parts closer than the blueprint's minimum
   clearance (default 0.5 mm static, 1 mm moving). Zero distance without a mate is a warning.
 - `assembly.envelope`: bbox outside the envelope constraint is critical (cite both).
-- `assembly.hole-pattern`: holes on mating parts or interface definitions are coaxial, with the
+- `assembly.hole-pattern`: holes on mating parts or interface definitions (`holes[].centres_mm`
+  against the mating part's, or against the interface's pattern) are coaxial, with the
   same pitch and count. Position mismatch > (clearance-hole Ø − bolt Ø)/2 is critical.
 - `assembly.fit-class`: shaft/hole pairs have a fit that suits the function (sliding H7/g6,
   locating H7/h6, press H7/p6). A missing fit on a functional bore is a warning.
@@ -30,7 +31,7 @@ mating bolt patterns, datums, envelope (CON). Assembly-only checks then become `
   from the contributing dimensions. Use their tolerances, or the general tolerance class if none.
   Show the chain in `evidence`. Worst-case closing at or below zero where the gap must stay
   positive is critical.
-- `assembly.mates`: broken or dangling mates (`mates[].ok == false`), under-constrained
+- `assembly.mates`: broken or dangling mates (`mates.broken`), under-constrained
   components that should be fixed
 - `assembly.tool-access`: room for a hex key or socket around each fastener (head Ø + ~2× key
   size), and a sensible assembly order

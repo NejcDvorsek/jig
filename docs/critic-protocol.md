@@ -67,7 +67,7 @@ key.
       "target": "bracket/Pocket1",
       "severity": "critical",
       "title": "Pocket corners sharp: cannot be milled",
-      "evidence": "snapshot parts[0].sharp_internal_edges = 4 on Pocket1; process = CNC milling (CON-003)",
+      "evidence": "snapshot parts[0].sharp_internal_edges.groups: 4 along z on Pocket1; process = CNC milling (CON-003)",
       "requirement": "CON-003",
       "recommendation": "Add R3 corner radii (Ø6 end mill) to Pocket1, or make it a through-slot.",
       "suggested_change": { "kind": "add_feature", "detail": "fillet R3 on 4 vertical pocket edges" },

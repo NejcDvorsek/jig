@@ -25,7 +25,9 @@ against the most likely process and say which one you assumed.
 
 **CNC milling / turning**
 - `dfm.internal-corner-radius`: internal vertical corners need radius ≥ tool radius (blueprint min
-  tool, else assume Ø6 → R3). Sharp internal edges are not millable.
+  tool, else assume Ø6 → R3). Sharp internal edges along the tool axis
+  (`sharp_internal_edges.groups[].direction` = a setup direction's axis) are not millable. Sharp
+  floor edges are. `sharp_internal_edges: null` means not checkable, not clean.
 - `dfm.pocket-depth`: pocket depth ≤ 4 × corner tool diameter. Deeper needs long-reach tools.
 - `dfm.hole-depth`: drilled depth/diameter > 6 is a warning, > 10 critical unless the blueprint
   accepts gun drilling
@@ -36,7 +38,8 @@ against the most likely process and say which one you assumed.
 **Casting / moulding**
 - `dfm.draft`: faces parallel to the pull with < 1° draft (`draft_check`). < 0.5° on textured
   faces is critical
-- `dfm.undercut`: faces that face against the pull (overhangs with `up` = pull)
+- `dfm.undercut`: faces that face against the pull (`draft_check.undercut_faces`, or overhangs with
+  `up` = pull)
 - `dfm.wall-uniformity`: max/min wall ratio > 2 means sink and warp risk
 - `dfm.sharp-corners`: internal radius < 0.5 × wall
 

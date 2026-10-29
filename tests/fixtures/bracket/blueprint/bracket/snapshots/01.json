@@ -1,13 +1,14 @@
 {
-  "schema": "jig/snapshot@1",
+  "schema": "jig/snapshot@2",
   "iteration": 1,
   "taken_at": "2026-10-28T12:00:00Z",
   "connector": { "name": "solidworks", "cad_version": "SOLIDWORKS 2026", "server_version": "0.16.3" },
   "partial": false,
   "sections": ["core", "material", "holes", "walls", "radii", "setups", "assembly", "drawing"],
   "focus": null,
+  "source": "model_read",
   "document": { "type": "part", "name": "bracket", "path": "C:/fixtures/bracket.SLDPRT", "saved": true },
-  "capabilities": { "features": "full", "dimensions": "full", "annotations": "full", "drawing": "full" },
+  "capabilities": { "model_read": "full", "features": "full", "dimensions": "full", "annotations": "full", "drawing": "full" },
   "parts": [
     {
       "name": "bracket",
@@ -37,17 +38,27 @@
       ],
       "equations": [],
       "holes": [
-        { "diameter_mm": 8.4, "depth_mm": 10.0, "through": true, "axis": [0, 0, 1],
-          "centre_mm": [20, 10, 5],
+        { "feature": "CBORE for M8", "source": "wizard", "confidence": "high",
+          "kind": "counterbore", "standard": "ISO", "size": "M8", "fit": "close",
+          "diameter_mm": 8.4, "depth_mm": 10.0, "through": true,
           "counterbore": { "diameter_mm": 15.0, "depth_mm": 6.0 },
-          "feature": "CBORE for M8", "thread": null, "count_same": 4,
-          "pattern": "80 x 40 rectangle" },
-        { "diameter_mm": 3.0, "depth_mm": 36.0, "through": false, "axis": [1, 0, 0],
-          "centre_mm": [0, 30, 25], "counterbore": null, "feature": "Pin hole", "thread": null, "count_same": 1 }
+          "countersink": null, "thread": null,
+          "axis": [0, 0, -1], "entrance": "+z", "body": "Base",
+          "count": 4,
+          "centres_mm": [[20, 10, 10], [100, 10, 10], [20, 50, 10], [100, 50, 10]] },
+        { "feature": "Pin hole", "source": "geometry", "confidence": "high",
+          "kind": "simple", "standard": null, "size": null, "fit": null,
+          "diameter_mm": 3.0, "depth_mm": 36.0, "through": false,
+          "counterbore": null, "countersink": null, "thread": null,
+          "axis": [1, 0, 0], "entrance": "-x", "body": "Base",
+          "count": 1,
+          "centres_mm": [[0, 30, 25]] }
       ],
       "internal_radii_mm": [ { "radius": 2.0, "feature": "Fillet1", "count": 2 } ],
-      "sharp_internal_edges": 4,
-      "sharp_internal_edges_on": "Pocket1 (4 vertical corners)",
+      "sharp_internal_edges": {
+        "count": 4,
+        "groups": [ { "feature": "Pocket1", "direction": "z", "length_mm": 6.0, "count": 4 } ]
+      },
       "planar_face_normals": [
         { "normal": [0, 0, 1], "count": 3, "area_mm2": 6800 },
         { "normal": [0, 0, -1], "count": 1, "area_mm2": 7500 },

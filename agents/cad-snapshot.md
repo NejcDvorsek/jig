@@ -20,9 +20,6 @@ Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Paths inside the plugin files you read are
 - `focus` (optional): what the snapshot is for. Spend detail on the focused features (exact hole
   data, the wall at that pocket) and keep the rest summary-level.
 - `checks` (optional): extra checks, e.g. `draft pull=+z`, `wall 2.0`
-- `seed` (optional): a partial snapshot Blueprint wrote from its own readings after the edit
-  (`snapshots/NN-edit.json`). Copy its sections as they are and **don't read them again**. Read only
-  the requested sections it lacks, and set `seeded_from` and `sources` (see `docs/snapshot-schema.md`).
 
 ## Steps
 
@@ -34,13 +31,17 @@ Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Paths inside the plugin files you read are
    Then call `documents`: what is open now is not yours to close (*Leave the CAD as you found it*
    in the contract).
 4. For each model file, activate it if it is already open (or open it), and read **only the requested
-   sections**:
-   - `core`: features, dimensions, equations, mass, bbox, bodies
-   - `material`, `holes`, `radii`, `setups`: derive them from faces/edges/features as the adapter
-     describes
-   - `walls` / `draft`: thresholds by process, from the table below
-   - `assembly`: components, fasteners, mates, interference, and the clearances that the blueprint's
-     interfaces name
+   sections**. Work out the wall threshold (table below) and the pull direction first.
+   - **If the connector has `model_read`**, one call reads every model section it covers (`core`,
+     `material`, `holes`, `radii`, `setups`, `walls`, `draft`, and `assembly` where supported, with
+     the clearances that the blueprint's interfaces name). Map its result as the adapter's *Snapshot*
+     section says. Don't re-derive what it returned, and don't fill its gaps with the fallback.
+   - **Otherwise**, or for sections it doesn't cover, use the adapter's fallback recipe:
+     - `core`: features, dimensions, equations, mass, bbox, bodies
+     - `material`, `holes`, `radii`, `setups`: derive them from faces/edges/features
+     - `walls` / `draft`: at the threshold and pull you worked out
+     - `assembly`: components, fasteners, mates, interference, and the clearances that the
+       blueprint's interfaces name
    - `drawing`: find the drawing next to the model (same name, drawing extension) or in the
      blueprint's `model:` list. If the connector can read drawings, open it, read views, annotations,
      title block and the drawing check, render an image, fill the dimensions' `tolerance` from the
@@ -48,8 +49,8 @@ Plugin root: `${CLAUDE_PLUGIN_ROOT}`. Paths inside the plugin files you read are
      (export one if possible) and set `annotations: null`
    - `images`: an iso screenshot to `blueprint/<slug>/shots/NN-iso.png`. If the file is under 2 KB it
      is blank: delete it and record a gap
-5. Write the JSON to `out`, setting `partial`, `sections` and `focus`. Every unknown value in a read
-   section is `null`, with an entry in `gaps`.
+5. Write the JSON to `out`, setting `partial`, `sections`, `focus` and `source`. Every unknown value
+   in a read section is `null`, with an entry in `gaps`.
 6. **Close what you opened**, without saving, per the contract, even if you stop on an error.
 
 ## Process thresholds

@@ -1,4 +1,4 @@
-# Snapshot schema (`jig/snapshot@1`)
+# Snapshot schema (`jig/snapshot@2`)
 
 A snapshot is the neutral, CAD-independent picture of the model that the Red Line critics review.
 The `cad-snapshot` agent writes it to `blueprint/<slug>/snapshots/NN[-tag].json`.
@@ -8,13 +8,11 @@ The `cad-snapshot` agent writes it to `blueprint/<slug>/snapshots/NN[-tag].json`
 fields of sections that were not read are left out entirely (not `null`), so nobody mistakes them
 for gaps. `core` is always present. A `focus` field repeats what the snapshot was taken for.
 
-**Seeded snapshots.** After an edit, Blueprint has already read much of the model: mass, bbox,
-features, dimensions, the interference check, hole positions. It writes those readings as a partial
-snapshot, `snapshots/NN-edit.json`, with `"source": "edit"`. It takes only values read **after the
-last write**, and a section only if every field of it was read. The review snapshot then starts from
-this **seed**: `"seeded_from": "snapshots/NN-edit.json"` and `"sources": {"core": "edit", "holes":
-"edit", "walls": "snapshot"}` say which section came from where. Only the missing sections are read
-again.
+**Where the values come from.** A connector with the `model_read` operation derives every model
+section on the server, in one call (`connector-contract.md`). Then the snapshot agent only maps
+fields and adds the blueprint-side ones (`bound_param`, the wall threshold). Without it, the
+adapter's fallback recipe derives them from faces and edges. `"source"` says which: `"model_read"`
+or `"derived"`. Every snapshot is read fresh, after the last write.
 
 Rules:
 - Units: always **mm, kg, degrees, mm², mm³**. Convert if the connector reports anything else.
@@ -26,7 +24,7 @@ Rules:
 
 ```jsonc
 {
-  "schema": "jig/snapshot@1",
+  "schema": "jig/snapshot@2",
   "iteration": 2,
   "taken_at": "2026-10-28T14:05:00Z",
   "connector": { "name": "solidworks", "cad_version": "SOLIDWORKS 2026", "server_version": "0.16.0" },
@@ -34,8 +32,7 @@ Rules:
   "partial": true,                                   // false = every section read
   "sections": ["core", "holes", "material"],
   "focus": "4× CBORE for M8 → M10 counterbore",      // null for a full snapshot
-  "seeded_from": "snapshots/02-edit.json",           // null when everything was read fresh
-  "sources": { "core": "edit", "holes": "edit", "material": "snapshot" },
+  "source": "model_read",                            // model_read | derived (see above)
 
   "document": { "type": "part", "name": "bracket", "path": "C:/.../bracket.SLDPRT", "saved": true },
 
@@ -61,18 +58,32 @@ Rules:
       ],
       "equations": [ { "name": "thickness", "value": 8.0, "expression": "8" } ],
 
-      // Derived from faces/edges: the snapshot agent fills these from the raw topology
-      "holes": [
-        { "diameter_mm": 9.0, "depth_mm": 8.0, "through": true, "axis": [0,0,1],
-          "centre_mm": [12,12,4], "counterbore": { "diameter_mm": 15.0, "depth_mm": 8.6 },
-          "feature": "CBORE for M8", "thread": null, "count_same": 4 }
+      // Derived: by the connector's model_read, or by the snapshot agent from faces/edges
+      "holes": [                              // one entry per set of identical holes, every body
+        { "feature": "CBORE for M8", "source": "wizard",          // wizard | geometry
+          "confidence": "high",                                   // high | medium | low
+          "kind": "counterbore",              // simple | counterbore | countersink | tapped | pipe_tapped
+          "standard": "ISO", "size": "M8", "fit": "normal",       // null when not a standard hole
+          "diameter_mm": 9.0, "depth_mm": 8.0, "through": true,
+          "counterbore": { "diameter_mm": 15.0, "depth_mm": 8.6 }, // null if none
+          "countersink": null,                                    // { "diameter_mm", "angle_deg" }
+          "thread": null,                                         // { "designation": "M6x1.0", "depth_mm": 12, "cosmetic": true }
+          "axis": [0,0,-1],                   // drilling direction, from the entrance into the material
+          "entrance": "+z",                   // the face direction the tool comes from
+          "body": "Base",
+          "count": 4,
+          "centres_mm": [[12,12,8], [108,12,8], [12,48,8], [108,48,8]] }   // at the entrance face
       ],
       "internal_radii_mm": [ { "radius": 3.0, "feature": "Fillet1", "count": 4 } ],
-      "sharp_internal_edges": 2,              // concave edges with no fillet, null if not derivable
+      "sharp_internal_edges": {               // concave edges with no fillet; null if not derivable
+        "count": 4,
+        "groups": [ { "feature": "Pocket1", "direction": "z", "length_mm": 6.0, "count": 4 } ]
+      },                                      // direction: the edge's axis, null when curved
       "planar_face_normals": [ { "normal": [0,0,1], "count": 3, "area_mm2": 9000 } ],
       "setup_directions": ["+z", "-z", "+x"], // distinct directions a machinist must reach
-      "wall_check": { "threshold_mm": 2.0, "min_found_mm": 3.1, "thin_spots": [] },
-      "draft_check": { "pull": "+z", "min_draft_deg": 0.0, "faces_below_1deg": 6 },  // only if requested
+      "wall_check": { "threshold_mm": 2.0, "min_found_mm": 3.1, "thin_spots": [] },  // thin_spots: worst 20
+      "draft_check": { "pull": "+z", "min_draft_deg": 0.0, "faces_below_1deg": 6,    // only if requested
+                       "faces": [ { "face": 7, "draft_deg": 0.0, "area_mm2": 400 } ], "undercut_faces": [] },
       "faces_raw": null                       // raw list only for small parts
     }
   ],
@@ -80,7 +91,7 @@ Rules:
   "assembly": {                               // null for a single part
     "components": [ { "name": "bracket-1", "part": "bracket", "fixed": true, "transform": null } ],
     "fasteners": [ { "component": "M8x25-1", "designation": "ISO 4762 M8x25", "count": 4 } ],
-    "mates": [ { "name": "Concentric1", "type": "concentric", "ok": true } ],
+    "mates": { "count": 312, "broken": [ { "name": "Concentric7", "type": "concentric", "error": "…" } ] },
     "interference": [ { "a": "bracket-1", "b": "plate-1", "volume_mm3": 12.5 } ],
     "clearances": [ { "a": "bracket-1", "b": "cover-1", "min_distance_mm": 0.4 } ]
   },
@@ -118,8 +129,13 @@ Rules:
   writes the binding into the blueprint; the snapshot agent copies it over by matching the dimension
   id against the blueprint's parameter table.
 - `holes` is the most useful derived field: Standards checks it against clearance-hole and thread
-  tables, Assembly against the mating part, Cost counts sizes (tool changes).
-- `setup_directions`: the distinct outward normals of machined faces that a 3-axis machine must
-  reach. It is a rough count of setups.
+  tables, Assembly the `centres_mm` against the mating part, DFM depth/Ø, Cost counts sizes (tool
+  changes). A `confidence: low` hole is not grounds for a critical flag on its own.
+- `sharp_internal_edges.groups[].direction` tells DFM which edges matter: on a 3-axis mill, sharp
+  concave edges **along the tool axis** (vertical pocket corners) cannot be cut, while sharp floor
+  edges can.
+- `setup_directions`: the distinct outward normals of planar faces plus the hole entrances, i.e. the
+  directions a 3-axis machine must reach. It is a rough count of setups.
+- `mates` lists only the broken ones, with the total count, so large assemblies stay readable.
 - `fasteners` come from component names, file names or the connector's hardware library. If the
   designation can't be determined, keep the name and set `designation: null`.

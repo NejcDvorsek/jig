@@ -32,11 +32,6 @@ confirm ("just do it"). Never write without one of the two.
 
 ## After the last change
 
-- **Keep your readings.** If critics are planned, write what you read **after the last write** as
-  a seed snapshot `blueprint/<slug>/snapshots/NN-edit.json` (`docs/snapshot-schema.md`, *Seeded
-  snapshots*): `core` (the final `features`, `dimensions`, `mass`, `bbox` read-back), plus any other
-  planned section you read in full along the way (holes, interference, clearances). Raw readings only,
-  with no judgement. Drop anything read before a later write.
 - Save the document. Don't close anything yet: the review may still need it (the orchestrator's
   Finish step closes it).
 - If any changed value feeds a §7 hand calculation or a §2 requirement, recompute it and update

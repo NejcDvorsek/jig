@@ -10,8 +10,8 @@ severity or higher, raises no critical outside its list, and returns valid `jig/
 | standards | counterbore depth 6.0 for M8 (head 8 mm): head proud, but CON-002 says flush | critical | `holes[0].counterbore.depth_mm` |
 | standards | CAD material 6061 ≠ blueprint EN AW-6082-T6 | critical | `parts[0].material` |
 | standards | tolerances: interface holes carry none | info/warning | `dimensions[].tolerance` all null |
-| dfm | 4 sharp internal corners in Pocket1, CNC with min tool Ø6 | critical | `sharp_internal_edges` |
-| dfm | pin hole Ø3 × 36 deep: depth/dia = 12 | critical | `holes[1]` |
+| dfm | 4 sharp internal corners in Pocket1, CNC with min tool Ø6 | critical | `sharp_internal_edges.groups` |
+| dfm | pin hole Ø3 × 36 deep: depth/dia = 12 | critical | `holes[1]` (depth/Ø) |
 | dfm | 4 setup directions on 3-axis | warning | `setup_directions` |
 | assembly | envelope 125 mm > CON-001 120 mm | critical | `bbox_mm.size[0]` |
 | cost | no cost target / quantity | info | blueprint has none |

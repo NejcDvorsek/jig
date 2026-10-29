@@ -2,8 +2,22 @@
 
 ## Unreleased · 2026-10-29
 
+- **Snapshot in one call.** New optional connector operation `model_read`: the server derives the
+  snapshot's model sections itself. SolidWorks maps it to sw-mcp's `read_model`, with the old face/edge
+  recipe as the fallback for builds without it. Release this together with the `.mcp.json` pin bump to the sw-mcp release
+  that ships `read_model`.
+- **Seeded snapshots are gone** (`NN-edit.json`, `seeded_from`, `sources`): Edit no longer writes
+  readings for the review to reuse, and every review snapshot is read fresh.
+- Snapshot schema **`jig/snapshot@2`**: holes are one entry per set, with `count` + `centres_mm`
+  (was `count_same` + one `centre_mm`), `kind`, `standard`/`size`/`fit`, `entrance`, `body`,
+  `source` and `confidence`. `sharp_internal_edges` is `{count, groups}` with each group's edge
+  direction, so DFM can tell vertical pocket corners from floor edges. `mates` is `{count, broken}`.
+  `draft_check` gains `faces` and `undercut_faces`. The snapshot carries `source`
+  (`model_read` | `derived`). The bracket fixture is updated.
 - The SolidWorks server is pinned exactly (`sw-mcp==0.1.0`) instead of a range. A server update
-  now ships as a Jig release.
+  now ships as a Jig release. `CONNECTOR.md` now describes only the pinned server: the
+  base/drawings generations, the older tool names and the conventions repeated from
+  `solidworks://guide` are gone, and so is `server-requests.md`.
 - Simpler critics: `docs/critic-protocol.md` now holds the method, the `jig/flags@1` output and the
   topic owners, so each critic reads one file instead of three (`flag-schema.md` is gone, impact-map
   §6 points there). The output JSON is no longer repeated in each agent.
