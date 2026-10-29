@@ -1,0 +1,16 @@
+{
+  "name": "jig-cad",
+  "owner": {
+    "name": "Nejc Dvorsek"
+  },
+  "metadata": {
+    "description": "Jig: plan, edit and review real CAD models with Claude."
+  },
+  "plugins": [
+    {
+      "name": "jig",
+      "source": "./",
+      "description": "Everyday CAD edits and reviews plus a spec-driven design loop, with Blueprint (drafter) and Red Line (critics). SolidWorks connector included."
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schema": "jig/snapshot@1",
+  "iteration": 1,
+  "taken_at": "2026-10-28T12:00:00Z",
+  "connector": { "name": "solidworks", "cad_version": "SOLIDWORKS 2026", "server_version": "0.16.3" },
+  "partial": false,
+  "sections": ["core", "material", "holes", "walls", "radii", "setups", "assembly", "drawing"],
+  "focus": null,
+  "document": { "type": "part", "name": "bracket", "path": "C:/fixtures/bracket.SLDPRT", "saved": true },
+  "capabilities": { "features": "full", "dimensions": "full", "annotations": "full", "drawing": "full" },
+  "parts": [
+    {
+      "name": "bracket",
+      "path": "C:/fixtures/bracket.SLDPRT",
+      "material": { "name": "6061 Alloy", "density_kg_m3": 2700 },
+      "mass_kg": 0.168,
+      "volume_mm3": 62300,
+      "surface_area_mm2": 21400,
+      "centre_of_mass_mm": [60.0, 30.0, 5.2],
+      "bbox_mm": { "min": [0, 0, 0], "max": [125, 60, 40], "size": [125, 60, 40] },
+      "bodies": 1,
+      "features": [
+        { "name": "Base", "type": "Extrusion", "suppressed": false, "error": null },
+        { "name": "Upright", "type": "Extrusion", "suppressed": false, "error": null },
+        { "name": "Pocket1", "type": "Cut-Extrude", "suppressed": false, "error": null },
+        { "name": "CBORE for M8", "type": "HoleWzd", "suppressed": false, "error": null },
+        { "name": "Pin hole", "type": "Cut-Extrude", "suppressed": false, "error": null },
+        { "name": "Fillet1", "type": "Fillet", "suppressed": false, "error": null }
+      ],
+      "dimensions": [
+        { "id": "D1@Base", "feature": "Base", "value": 10.0, "unit": "mm", "tolerance": null, "bound_param": "PAR-001" },
+        { "id": "D2@Base", "feature": "Base", "value": 125.0, "unit": "mm", "tolerance": null, "bound_param": null },
+        { "id": "D1@Pocket1", "feature": "Pocket1", "value": 30.0, "unit": "mm", "tolerance": null, "bound_param": null },
+        { "id": "D2@Pocket1", "feature": "Pocket1", "value": 6.0, "unit": "mm", "tolerance": null, "bound_param": null },
+        { "id": "D1@Pin hole", "feature": "Pin hole", "value": 3.0, "unit": "mm", "tolerance": null, "bound_param": null },
+        { "id": "D2@Pin hole", "feature": "Pin hole", "value": 36.0, "unit": "mm", "tolerance": null, "bound_param": null }
+      ],
+      "equations": [],
+      "holes": [
+        { "diameter_mm": 8.4, "depth_mm": 10.0, "through": true, "axis": [0, 0, 1],
+          "centre_mm": [20, 10, 5],
+          "counterbore": { "diameter_mm": 15.0, "depth_mm": 6.0 },
+          "feature": "CBORE for M8", "thread": null, "count_same": 4,
+          "pattern": "80 x 40 rectangle" },
+        { "diameter_mm": 3.0, "depth_mm": 36.0, "through": false, "axis": [1, 0, 0],
+          "centre_mm": [0, 30, 25], "counterbore": null, "feature": "Pin hole", "thread": null, "count_same": 1 }
+      ],
+      "internal_radii_mm": [ { "radius": 2.0, "feature": "Fillet1", "count": 2 } ],
+      "sharp_internal_edges": 4,
+      "sharp_internal_edges_on": "Pocket1 (4 vertical corners)",
+      "planar_face_normals": [
+        { "normal": [0, 0, 1], "count": 3, "area_mm2": 6800 },
+        { "normal": [0, 0, -1], "count": 1, "area_mm2": 7500 },
+        { "normal": [1, 0, 0], "count": 2, "area_mm2": 1800 },
+        { "normal": [-1, 0, 0], "count": 2, "area_mm2": 1800 },
+        { "normal": [0, 1, 0], "count": 2, "area_mm2": 1650 }
+      ],
+      "setup_directions": ["+z", "-z", "-x", "+y"],
+      "wall_check": { "threshold_mm": 1.0, "min_found_mm": 4.0, "thin_spots": [] },
+      "draft_check": null,
+      "faces_raw": null
+    }
+  ],
+  "assembly": null,
+  "drawings": [
+    {
+      "path": "C:/fixtures/bracket.SLDDRW",
+      "pdf": null,
+      "image": null,
+      "sheet": { "size": "A4", "scale": "1:1", "projection": "third angle" },
+      "views": [
+        { "name": "front", "type": "model", "scale": "1:1" },
+        { "name": "top", "type": "projected", "scale": "1:1" }
+      ],
+      "annotations": [
+        { "id": "RD1@Drawing View1", "view": "front", "type": "dimension", "text": "125", "value": 125.0, "dimension_id": "D2@Base" },
+        { "id": "RD2@Drawing View1", "view": "front", "type": "dimension", "text": "10", "value": 10.0, "dimension_id": "D1@Base" },
+        { "id": "RD3@Drawing View2", "view": "top", "type": "hole_callout", "text": "4X Ø8.4 THRU / ⌴ Ø15 ↧ 6" }
+      ],
+      "title_block": { "material": "6061 Alloy", "weight": "0.17 kg", "part_no": null, "general_tolerance": null, "drawn_by": null },
+      "problems": [
+        { "kind": "uncovered_feature", "what": "Pocket1 has no dimension or callout" },
+        { "kind": "uncovered_feature", "what": "Pin hole has no dimension or callout" }
+      ],
+      "stale": false
+    }
+  ],
+  "images": [],
+  "gaps": []
+}
