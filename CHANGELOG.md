@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased · 2026-10-29
+
+- Simpler critics: `docs/critic-protocol.md` now holds the method, the `jig/flags@1` output and the
+  topic owners, so each critic reads one file instead of three (`flag-schema.md` is gone, impact-map
+  §6 points there). The output JSON is no longer repeated in each agent.
+- One review procedure, `docs/blueprint/review.md`, used by the orchestrator, `redline` and
+  `converge`.
+- Tiers 1 and 2 are one "change" path with a **baseline** switch (interface, requirement-bound
+  parameter, assembly, or several kinds of change).
+- One table of process wall thresholds (the snapshot agent's); DFM judges against
+  `wall_check.threshold_mm`. "Leave the CAD as you found it" is stated once, in the contract.
+- SolidWorks connector: uses `close_document`, `open_document`, `save_document`, `add_hole(iso=…)`
+  and the other merged tools of newer server builds, with the old names as fallbacks.
+
 ## 0.1.0 · 2026-10-28
 
 - Named Jig (was "Blueprint + Red Line"; those remain the names of the drafter and the critics).

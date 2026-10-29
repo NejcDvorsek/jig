@@ -17,7 +17,10 @@ wins**. Two generations exist:
 - **Base** (PyPI releases, 0.16–0.17): modelling, inspection, assemblies, and a basic `make_drawing`.
 - **Drawings** (server builds that have `list_views`, `check_drawing` and the other drawing tools
   below): drawings can be read and written. Every row marked *(drawings)* needs this generation. If
-  those tools are missing, use the base fallback in the same row.
+  those tools are missing, use the base fallback in the same row. Builds from 2026-10-29 also merge
+  the modelling and document families into one tool each (`close_document`, `open_document`,
+  `add_hole(iso=…)`, …). Older builds and PyPI have the separate tools named in brackets below:
+  use whichever the live tool list has.
 
 Check once per session which generation is live, and record it in the snapshot's `capabilities`.
 
@@ -46,7 +49,7 @@ Check once per session which generation is live, and record it in the snapshot's
 | `dimensions` | `list_dimensions` | partial | values only. Tolerances: see `annotations` |
 | `equations` | `list_equations` | full | |
 | `mass` | `get_mass_properties` | partial | volume, mass, area, CoM, bbox. Material name is not returned: take it from the last `set_material` result, the drawing's title block, or record a gap |
-| `bbox` | `get_bounding_box`, `get_assembly_bounding_box` | full | |
+| `bbox` | `get_bounding_box` (also assemblies; older: `get_assembly_bounding_box`) | full | |
 | `bodies` | `list_bodies` | full | |
 | `faces` | `list_faces` | partial | cylinders give axis, radius, centre (use for holes). **First body only** on multibody parts |
 | `edges` | `list_edges` | partial | filter by face/feature/box. **First body only** on multibody parts |
@@ -71,8 +74,8 @@ Check once per session which generation is live, and record it in the snapshot's
 | Neutral op | Tool(s) | Notes |
 |---|---|---|
 | `set_dimension` | `set_dimension` | read back with `list_dimensions` |
-| `set_equation` | `set_equation`, `set_equations`, `delete_equation` | preferred for PAR-bound values |
-| `add_feature` | `add_box`, `add_disc`, `add_cylinder`, `add_cone`, `add_extruded_profile*`, `add_revolved_profile`, `add_swept_*`, `add_lofted_solid`, *(drawings)* `add_loft` (also loft cuts), `add_boss_on_face`, `add_sketch` + `extrude_sketch` / `cut_sketch`, `cut_profile*`, `cut_slot`, `cut_offset_pocket`, `add_hole*`, `add_counterbore_hole`, `add_hole_wizard`, `add_thread`, `add_fillet`, `add_full_round`, `add_chamfer`, `add_shell`, `add_rib`, `add_mirror`, `add_linear_pattern`, `add_circular_pattern`, `add_plane`, *(drawings)* `add_axis`, `combine_bodies`, `split_body`, `add_text_on_face` | see `solidworks://guide` for recipes. Prefer `add_hole_wizard` for standard ISO holes: it carries the standard into the callouts. With `add_axis`, `add_circular_pattern(axis=…)` turns about any axis |
+| `set_equation` | `set_equation` (a list too; older: `set_equations`), `delete_equation` | preferred for PAR-bound values |
+| `add_feature` | `add_box`, `add_disc`, `add_cylinder`, `add_cone`, `add_extruded_profile` (`face=` / `plane=` / `spline=`; older: `*_on_face`, `*_on_plane`, `add_extruded_spline`), `add_revolved_profile`, `add_swept_*`, `add_loft` (sketches or `profiles_mm`; older: `add_lofted_solid`), `add_boss_on_face`, `add_sketch` + `extrude_sketch` / `cut_sketch`, `cut_profile` (`face=` / `plane=`; older: `cut_profile_on_face`, `cut_profile_through_plane`), `cut_slot`, `cut_offset_pocket`, `add_hole` (`face=`, `cbore_*`, `iso=`; older: `add_hole_on_face`, `add_counterbore_hole`, `add_hole_wizard`), `add_thread`, `add_fillet`, `add_full_round`, `add_chamfer`, `add_shell`, `add_rib`, `add_mirror`, `add_linear_pattern`, `add_circular_pattern`, `add_plane`, *(drawings)* `add_axis`, `combine_bodies`, `split_body`, `add_text_on_face` | see `solidworks://guide` for recipes. Prefer the Hole Wizard (`add_hole(iso=…)`) for standard ISO holes: it carries the standard into the callouts. With `add_axis`, `add_circular_pattern(axis=…)` turns about any axis |
 | `delete_feature` / `suppress_feature` / `reorder_feature` | same names | |
 | `set_material` | `set_material` | |
 | `set_appearance` | `set_appearance` | cosmetic |
@@ -80,10 +83,10 @@ Check once per session which generation is live, and record it in the snapshot's
 | `drawing_build` | *(drawings)* `build_drawing(spec)` | the whole drawing from a spec (views, sections, details, dims, callouts, symbols, notes, tables, props). To change it, edit the spec and rebuild |
 | `drawing_edit` | *(drawings)* `drawing_file`, `add_view`, `edit_view`, `auto_layout`, `import_dimensions`, `add_dimension`, `add_symbol` (hole callout, surface finish, datum, GD&T), `add_note`, `add_table`, `edit_annotation`, `set_drawing_properties` | the small changes: one callout, one tolerance, a datum, the title block |
 | `set_tolerance` | *(drawings)* `edit_annotation(id, tolerance=[upper, lower] / fit='H7')` | on a model dimension this **changes the part**: the result says `changes_part`. Treat it as a model edit: confirm and checkpoint |
-| `save` | `save_part`, `save_assembly`; drawings `drawing_file(action='save')` | |
-| `new_document` / `open_document` | `new_part`, `new_assembly`, `open_part`, `open_assembly`, `activate_document`; drawings `drawing_file(action='new'/'open')` | |
-| `close_document` | parts and assemblies: `activate_document(title)`, then `close_part()`; drawings: `activate_document(title)`, then `drawing_file(action='close')` | both close **without saving and without asking**: save first if the changes are to be kept. See *Closing documents* |
-| assembly | `insert_component`, `add_mate`, `delete_mate`, `suppress_mate`, `set_component_transform`, `delete_component`, `check_motion` | |
+| `save` | `save_document()` (over its own file; older: `save_part` / `save_assembly` with the path); drawings `drawing_file(action='save')` | |
+| `new_document` / `open_document` | `new_document(kind)`, `open_document(path)`, `activate_document` (older: `new_part`, `new_assembly`, `open_part`, `open_assembly`); drawings `drawing_file(action='new'/'open')` | |
+| `close_document` | `close_document(title, save)`: any part, assembly or drawing by title (older builds: see *Closing documents*) | without `save=true` it closes **without saving and without asking**, and reports `discarded_changes` |
+| assembly | `insert_component`, `add_mate` (`mates=[…]` for several), `delete_mate`, `suppress_mate`, `set_component_transform`, `delete_component`, `check_motion` | |
 
 **Never used by Jig:** `run_script`, even when the server runs with `--allow-scripts`. Blueprint works
 only through typed tools, so every change can be checked, confirmed and logged.
@@ -95,30 +98,33 @@ This is how the contract's *leave the CAD as you found it* rule works in SolidWo
 - `list_documents` gives each open document's `title`, `path` (empty if never saved), `type`,
   `modified` and `visible`, plus which one is `current` for the tools and `active` in SolidWorks.
   Match documents by **path**, or by title for unsaved ones.
-- Close by title: `activate_document(title)` makes it current, then `close_part()` (part, assembly)
-  or `drawing_file(action='close')` (drawing). Always activate first. Without a current document,
-  `close_part` closes whatever SolidWorks has active, which may be the engineer's.
-- `close_part(save=true)` is not supported. Save first (`save_part` / `save_assembly` /
-  `drawing_file(action='save')`), check that `modified` is false in `list_documents`, then close.
-- Parts listed with `visible: false` were loaded by an open assembly. They go when that assembly
-  closes, so don't close them separately. A hidden part that stays after Jig closed its own assembly
-  is normal when one of the engineer's assemblies uses it too.
+- Close by title with `close_document(title)`, or `close_document(title, save=true)` for a document
+  with a confirmed edit. It needs no activation and never touches another document. A result with
+  `discarded_changes: true` means changes were dropped: check `modified` first for anything Jig
+  changed.
+- Parts listed with `visible: false` were loaded by an open assembly. They close with that assembly
+  (`close_document` refuses them). A hidden part that stays after Jig closed its own assembly is
+  normal when one of the engineer's assemblies uses it too.
 - `make_drawing` closes the drawing itself unless `keep_open=true`. `drawing_file(action='new'/'open')`
   and `build_drawing` leave the drawing open, so close it when that step is done.
 - Close drawings before the part they show, and Jig's assemblies before parts Jig opened on their own.
 - Finally, `activate_document` the engineer's previously active document, if there was one.
+- **Older builds** (no `close_document`): `activate_document(title)` first, then `close_part()` for a
+  part or assembly or `drawing_file(action='close')` for a drawing. Never call `close_part` without
+  activating first: with no current document it closes SolidWorks' active one, which may be the
+  engineer's. It can't save: save first with `save_part` / `save_assembly` and check `modified`.
 
 ## Large assemblies
 
 On assemblies with roughly 50 or more components or 100 or more mates, the tool results get big.
-Builds that have `add_mates` and `replace_component` (2026-10-29 and later) cover this. Older builds
+Builds that have `replace_component` (2026-10-29 and later) cover this. Older builds
 need the fallbacks.
 
-| Need | Builds with `add_mates` | Older builds |
+| Need | Builds with `replace_component` | Older builds |
 |---|---|---|
 | components in focus | `list_components(name="Bolt*")`: the matches and the mates that hold them. `brief=True` for name, path and fixed only, `mates=False` without mates | `list_components` returns everything. A result too large to show is saved to a file: Grep it for the components in focus instead of reading it whole |
-| several mates | one `add_mates([...])` (a result per mate) and one `delete_mate([...])` (it returns `mates_left`, a count) | one call per mate. Each returns all the mates left, so don't re-list in between |
-| swap a part | `replace_component(component, path)`: it returns the kept mates, and for each broken one the face it held and candidate faces (`#index`) on the new part. Then `delete_mate` the broken ones and `add_mates` them again on the candidates | note the mates (`list_components`) and their faces (`list_faces(component=...)`), then `delete_component`, `insert_component` at the same transform, re-add the mates |
+| several mates | one `add_mate(mates=[...])` (older: `add_mates`; a result per mate) and one `delete_mate([...])` (it returns `mates_left`, a count) | one call per mate. Each returns all the mates left, so don't re-list in between |
+| swap a part | `replace_component(component, path)`: it returns the kept mates, and for each broken one the face it held and candidate faces (`#index`) on the new part. Then `delete_mate` the broken ones and `add_mate(mates=[...])` them again on the candidates | note the mates (`list_components`) and their faces (`list_faces(component=...)`), then `delete_component`, `insert_component` at the same transform, re-add the mates |
 
 Either way, finish with `rebuild` (`mate_errors`), and put a re-mating in the plan as one change,
 not one per mate. Mates name the components they hold (`components`) in the newer builds.
@@ -155,8 +161,8 @@ not one per mate. Mates name the components they hold (`components`) in the newe
 - Base generation: `add_circular_pattern` finds only axes along model Z (*(drawings)*: use
   `add_axis` + `axis=`).
 - Saving over a file that is still open fails. Close it first, or save to a new path.
-- `close_part` and `drawing_file(action='close')` never prompt, so unsaved changes are lost. Check
-  `modified` in `list_documents` before closing anything Jig changed.
+- Closing never prompts, so unsaved changes are lost without `save=true`. Check `modified` in
+  `list_documents` before closing anything Jig changed.
 - A drawing refers to the saved part file. Save the part before `make_drawing` / `build_drawing`, and
   again after model edits before re-checking the drawing.
 - Hole callouts made with `add_symbol` / `import_dimensions` follow the model. Typing a callout's text

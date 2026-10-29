@@ -6,7 +6,9 @@ assemblies*) says how Jig uses each one, with a fallback for builds that lack it
 **Status 2026-10-29:** 1 to 4 are in the local build (branch `feature/drawings-and-modelling-gaps`,
 unreleased): `delete_mate` takes a list and returns `mates_left`, there are new `add_mates` and
 `replace_component` tools, and `list_components` has `name` / `mates` / `brief`. Unit tests pass. The
-live SolidWorks tests haven't run yet. 5 is still open.
+live SolidWorks tests haven't run yet. 5 is still open. Since then the local build also merges tool families (106 → 91 tools):
+`close_document(title, save)` closes any document by title without activating it first, and
+`add_mate(mates=[...])` replaces `add_mates`.
 
 Measured on a 102-component assembly with about 300 mates (2026-10-29): 23 mate calls, 10 broken
 mates after a part swap, and a `list_components` result too large to read directly.

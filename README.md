@@ -28,8 +28,9 @@ Requirements: Windows with SolidWorks installed and **running**, Claude Code, an
 /plugin install jig@jig-cad
 ```
 
-The plugin registers the SolidWorks MCP server ([`solidworks-mcp`](https://github.com/hjbaard/SolidWorks-MCP))
-itself, so there's nothing else to configure. Check the setup with `/jig:doctor`.
+The plugin registers its SolidWorks MCP server, [`sw-mcp`](https://github.com/NejcDvorsek/sw-mcp), itself,
+and uv fetches it from PyPI on first start, so there's nothing else to configure. Check the setup with
+`/jig:doctor`.
 
 ## Everyday use
 
@@ -165,13 +166,15 @@ There is no FEA in v1. Blueprint keeps hand calculations for each load requireme
 
 ## Known limits (SolidWorks connector)
 
-What's available depends on the server version, and `/jig:doctor` lists what is live.
-On the PyPI release (0.17):
+What's available depends on the server version, and `/jig:doctor` lists what is live. With `sw-mcp`:
 
-- Dimension tolerances and drawing annotations can't be read. Standards and Drawing fall back to the
-  drawing PDF and report the rest as unverifiable.
-- `make_drawing` produces a basic dimensioned drawing, so drawing fixes are left to you.
 - On multibody parts, faces and edges are read from the first body only.
+- Tolerances are read from the drawing's annotations. A part without a drawing is checked against its
+  general tolerance class.
+
+If you register the original upstream server (`solidworks-mcp` from PyPI) yourself instead, there are
+no drawing tools: tolerances and annotations can't be read, so Standards and Drawing fall back to the
+drawing PDF and report the rest as unverifiable, and `make_drawing` produces only a basic drawing.
 
 See [`connectors/solidworks/CONNECTOR.md`](connectors/solidworks/CONNECTOR.md).
 
@@ -187,11 +190,12 @@ claude --plugin-dir ./jig     # load from disk
 claude plugin validate ./jig
 ```
 
-To use a local build of the SolidWorks MCP, register it yourself, e.g.
-`claude mcp add solidworks -- uvx --from C:/path/to/SolidWorks-MCP solidworks-mcp`. When both are
-present, Blueprint uses your own registration.
+To use a local build of `sw-mcp`, register it yourself, e.g.
+`claude mcp add solidworks -- uvx --from C:/path/to/sw-mcp sw-mcp`. When both are present, Blueprint
+uses your own registration.
 
 ## License
 
-MIT. The bundled connector server `solidworks-mcp` is a separate MIT-licensed project, installed from
-PyPI at runtime.
+MIT. The connector server [`sw-mcp`](https://github.com/NejcDvorsek/sw-mcp) is a separate MIT-licensed
+project, installed from PyPI at runtime. It is a fork of Henk Jan Baard's
+[SolidWorks-MCP](https://github.com/hjbaard/SolidWorks-MCP).
