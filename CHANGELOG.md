@@ -28,6 +28,8 @@
   §6 points there). The output JSON is no longer repeated in each agent.
 - One review procedure, `docs/blueprint/review.md`, used by the orchestrator, `redline` and
   `converge`.
+- Converge no longer writes `redlines/summary.md`. Its contents were already in the blueprint
+  (§9 register, §10 questions, §11 History counts) and in the final report.
 - Tiers 1 and 2 are one "change" path with a **baseline** switch (interface, requirement-bound
   parameter, assembly, or several kinds of change).
 - One table of process wall thresholds (the snapshot agent's); DFM judges against

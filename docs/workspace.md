@@ -9,7 +9,7 @@ blueprint/
     ├── blueprint.md          the spec: lite at first, grows as constraints are stated
     ├── changelog.md          every model and spec change, with its reason
     ├── snapshots/NN[-tag].json
-    ├── redlines/NN[-tag]/<persona>.json   (+ summary.md after a converge run)
+    ├── redlines/NN[-tag]/<persona>.json
     ├── checkpoints/NN/       model files as they were before change NN
     └── shots/
 ```

@@ -65,9 +65,7 @@ otherwise restore that pass's checkpoint and log why.
 
 1. Set `status` to `converged` or `stopped`, with the reason in §11. Save the model, then close
    what Jig opened, per the contract. The model stays open between passes, but not after the loop.
-2. Write `blueprint/<slug>/redlines/summary.md`: C/W/I per persona per iteration, the open flags,
-   the deferred list with rationale, and the engineer questions.
-3. Report in under 20 lines: the outcome and reason, iterations used, the final key parameters and
+2. Report in under 20 lines: the outcome and reason, iterations used, the final key parameters and
    requirement status, what still needs the engineer (questions, including each unverified hard
    check and how to confirm it, deferred warnings worth a look, other gaps no critic could check),
    and how to steer: edit `blueprint.md` (values, `locked: yes`, set
