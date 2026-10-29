@@ -1,11 +1,11 @@
 # Connector: SolidWorks
 
-- **MCP server:** [`solidworks-mcp`](https://github.com/hjbaard/SolidWorks-MCP) (MIT), registered by this
+- **MCP server:** [`sw-mcp`](https://github.com/NejcDvorsek/sw-mcp) (MIT, a fork of `solidworks-mcp` with the drawing tools), registered by this
   plugin's `.mcp.json` as server `solidworks` and run with `uvx`. It drives the user's **running**
   SolidWorks over COM, on Windows only.
 - **Status tool:** `get_status`
 - **Start:** open SolidWorks and leave it running. The server attaches to it and does not launch it.
-- **Self-test:** `uvx solidworks-mcp --selftest` with SolidWorks open.
+- **Self-test:** `uvx sw-mcp --selftest` with SolidWorks open.
 - **Server guide:** read the MCP resource `solidworks://guide` before the first write in a session. It
   holds the modelling and drawing recipes and conventions. This adapter only maps the neutral
   operations.

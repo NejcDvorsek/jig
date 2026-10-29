@@ -2,7 +2,7 @@
   "mcpServers": {
     "solidworks": {
       "command": "uvx",
-      "args": ["--from", "solidworks-mcp>=0.16.2,<1", "solidworks-mcp"]
+      "args": ["--from", "sw-mcp==0.1.0", "sw-mcp"]
     }
   }
 }

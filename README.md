@@ -32,6 +32,10 @@ The plugin registers its SolidWorks MCP server, [`sw-mcp`](https://github.com/Ne
 and uv fetches it from PyPI on first start, so there's nothing else to configure. Check the setup with
 `/jig:doctor`.
 
+To update, run `/plugin marketplace update jig-cad`, update `jig` in `/plugin`, and restart Claude
+Code. Each Jig version pins the `sw-mcp` server version it was tested with, so the server updates
+along with it.
+
 ## Everyday use
 
 Just ask. The orchestrator triggers automatically, or you can call it:

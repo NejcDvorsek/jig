@@ -2,6 +2,8 @@
 
 ## Unreleased · 2026-10-29
 
+- The SolidWorks server is pinned exactly (`sw-mcp==0.1.0`) instead of a range. A server update
+  now ships as a Jig release.
 - Simpler critics: `docs/critic-protocol.md` now holds the method, the `jig/flags@1` output and the
   topic owners, so each critic reads one file instead of three (`flag-schema.md` is gone, impact-map
   §6 points there). The output JSON is no longer repeated in each agent.
@@ -25,7 +27,7 @@
 - Design mode: init and converge skills. Plus redline, snapshot and doctor.
 - Red Line critics: DFM, standards, cost, assembly, drawing, with focus, baseline and change/pre-existing scope.
 - Neutral snapshot (full or partial) and flag schemas, connector contract.
-- SolidWorks connector (solidworks-mcp >= 0.16.2, bundled via uvx).
+- SolidWorks connector (sw-mcp >= 0.1, bundled via uvx).
 - Speed: the review snapshot is seeded from the edit's own readings. Each topic has one owning
   critic, and triage merges repeats. A Cost gate (needs a cost target or a quantity above 5), "review
   later" with batched pending reviews, and "review: X only". The snapshot agent and the Cost,
