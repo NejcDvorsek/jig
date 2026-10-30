@@ -189,6 +189,13 @@ See [`connectors/solidworks/CONNECTOR.md`](connectors/solidworks/CONNECTOR.md).
 Write one adapter file. Critics, schemas, the orchestrator and the loop stay untouched. See
 [`docs/connector-contract.md`](docs/connector-contract.md).
 
+## Help and feedback
+
+Something not working? [Open an issue](https://github.com/NejcDvorsek/jig/issues) with the output of
+`/jig:doctor`, what you asked Jig to do, and what happened. Problems with a single SolidWorks tool
+call belong in [`sw-mcp`](https://github.com/NejcDvorsek/sw-mcp/issues), with the output of
+`uvx sw-mcp --selftest`.
+
 ## License
 
 MIT. The connector server [`sw-mcp`](https://github.com/NejcDvorsek/sw-mcp) is a separate MIT-licensed
