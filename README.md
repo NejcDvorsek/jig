@@ -24,8 +24,15 @@ added without changing them (see [Adding a connector](#adding-a-connector)).
 
 ## Install
 
-Requirements: Windows with SolidWorks installed and **running**, Claude Code, and
-[uv](https://docs.astral.sh/uv/getting-started/installation/).
+### Prerequisites
+
+- **Windows** with **SolidWorks** installed and **running** (the connector drives it through its COM
+  API, so it must run on the same machine).
+- **[Claude Code](https://docs.claude.com/en/docs/claude-code)** (CLI, desktop app or IDE extension).
+  Jig needs a local MCP server talking to SolidWorks, so it does not work in claude.ai chat or other
+  clients without local plugins. Cowork is untested.
+- **[uv](https://docs.astral.sh/uv/getting-started/installation/)**, which fetches and runs the
+  SolidWorks MCP server.
 
 ```text
 /plugin marketplace add NejcDvorsek/jig
