@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased · 2026-10-29
+## 0.2.0 · 2026-10-30
 
 - **Drawings fit their sheet.** A drawing with anything outside the frame, on the title block or
   running into another view is not finished. Edit's new *Fitting the sheet* lists what to do: lay
@@ -10,8 +10,8 @@
   steps themselves and report `fit`.
 - **Snapshot in one call.** New optional connector operation `model_read`: the server derives the
   snapshot's model sections itself. SolidWorks maps it to sw-mcp's `read_model`, with the old face/edge
-  recipe as the fallback for builds without it. Release this together with the `.mcp.json` pin bump to the sw-mcp release
-  that ships `read_model`.
+  recipe as the fallback for builds without it.
+- Requires **sw-mcp 0.2.0** (pinned in `.mcp.json`).
 - **Seeded snapshots are gone** (`NN-edit.json`, `seeded_from`, `sources`): Edit no longer writes
   readings for the review to reuse, and every review snapshot is read fresh.
 - Snapshot schema **`jig/snapshot@2`**: holes are one entry per set, with `count` + `centres_mm`

@@ -1,7 +1,7 @@
 {
   "name": "jig",
   "displayName": "Jig",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An engineering jig for AI in CAD: ask in plain language and Jig plans the change, confirms it with you, edits the real model with checked steps, and has only the relevant Red Line critics (DFM, standards, cost, assembly, drawing) review it. A full spec-and-converge mode is there for new designs. Ships with the SolidWorks connector.",
   "author": {
     "name": "Nejc Dvorsek"
