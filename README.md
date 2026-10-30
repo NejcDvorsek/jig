@@ -134,30 +134,6 @@ blueprint/
 
 ## How it works
 
-```text
- engineer request
-       │
- ┌─────▼──────┐   impact map: which capabilities, which critics, baseline?
- │orchestrator│──────────────────────────────────────────────────┐
- └─────┬──────┘                                                  │
-       │ plan → confirm                                          │
- ┌─────▼─────────────────────────────┐      ┌──────────────┐     │
- │ Blueprint: inspect · edit · spec  │◀────▶│ blueprint.md │     │
- │            triage · record        │      └──────────────┘     │
- └─────┬─────────────────────────────┘                           │
-       │ connector (the only CAD access)                         │
- ┌─────▼─────┐  read-only   ┌───────────────────────┐            │
- │ CAD model │─────────────▶│ snapshot (only needed │            │
- └───────────┘              │ sections), neutral    │            │
-                            └──────────┬────────────┘            │
-                                       ▼                         │
-        DFM · Standards · Cost · Assembly · Drawing  ◀── only the selected ones, in parallel,
-                                       │                 stateless, never see the CAD
-                                       ▼
-                        flags: critical / warning / info,
-                        scope: caused by change / pre-existing
-```
-
 - **Critics are a pure function**: `(blueprint, snapshot, focus, baseline) → flags`. Because they only
   see neutral files, they don't depend on the CAD system.
 - **A critic can't block with a guess.** A critical flag needs cited evidence. A check the data can't
@@ -177,15 +153,12 @@ There is no FEA in v1. Blueprint keeps hand calculations for each load requireme
 
 ## Known limits (SolidWorks connector)
 
-What's available depends on the server version, and `/jig:doctor` lists what is live. With `sw-mcp`:
-
-- On multibody parts, faces and edges are read from the first body only.
-- Tolerances are read from the drawing's annotations. A part without a drawing is checked against its
-  general tolerance class.
-
-If you register the original upstream server (`solidworks-mcp` from PyPI) yourself instead, there are
-no drawing tools: tolerances and annotations can't be read, so Standards and Drawing fall back to the
-drawing PDF and report the rest as unverifiable, and `make_drawing` produces only a basic drawing.
+- It runs on Windows only and needs SolidWorks already open. The server attaches to it but won't
+  start it.
+- Only SolidWorks is supported for now. Jig is built to work with other CAD programs, but SolidWorks
+  is the only connector so far.
+- Long sessions slow SolidWorks down, because its memory use grows over time. On a low-memory
+  warning, save and restart SolidWorks between runs, never during one.
 
 See [`connectors/solidworks/CONNECTOR.md`](connectors/solidworks/CONNECTOR.md).
 
