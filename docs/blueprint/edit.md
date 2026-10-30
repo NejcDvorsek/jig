@@ -47,6 +47,37 @@ tolerance on a model dimension) over typed text, which freezes. A tolerance set 
 changes the part: count it as a model change. Run the connector's drawing check afterwards. New
 problems from your edit get fixed or reported.
 
+### Fitting the sheet
+
+Every drawing Jig makes or changes must fit its sheet: no view, dimension, callout, note or table
+outside the frame or on the title block, and no view running into another (the drawing check's
+`outside_frame`, `over_title_block`, `view_outside_frame`, `view_over_title_block`,
+`views_overlap`, and text or leaders of one view clashing with another). A drawing with any of
+these is not finished: never hand it over or record it as done.
+
+Show as many views as the part needs and no more (ISO 128-3). Before laying out, and again when
+the sheet is tight, ask of each view: does it carry a dimension, or show a feature, that no other
+view does? Connectors that fit the sheet themselves say so in their result (the adapter names the
+field). When it still doesn't fit, work down this list and check again after each step:
+
+1. **Reposition.** Lay the views out again by their real size with their annotations, and move a
+   stray note, table or callout into free room.
+2. **Leave out what adds nothing.** The iso view first. Then a view with no dimension of its own
+   that shows nothing new, e.g. the side view of a flat plate: give its one size on another view or
+   in a note.
+3. **Combine.** A section in place of the full view it cuts; a detail view for one crowded region
+   instead of a larger scale for the whole part; a half view of a symmetric part; dimensions moved
+   to the view that shows the feature best, so that another view can go.
+4. **Larger sheet.** The next ISO size at the same scale (A4, A3, A2, A1). Don't shrink the scale
+   to make room: text and arrows don't shrink with it, so dimensions crowd.
+5. **Ask.** Past A1, or when a view the shop needs would have to go, ask the engineer (a second
+   sheet, or another split of views) as a §10 question.
+
+Steps 1, 4 and leaving out the iso view only move things or change the sheet size: do them without
+a new confirmation. Leaving out or replacing any other view changes what the drawing shows: put it
+in the plan with its reason. Record what was left out, combined or resized, e.g. *"A3 at 1:2, iso
+left out, side view replaced by section A-A."*
+
 ## Restoring
 
 "Undo that" or "go back": close the model files in the CAD program (for the engineer's own open

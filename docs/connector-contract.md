@@ -87,7 +87,7 @@ and write files.
 | `add_feature` | any modelling feature (the adapter lists its feature tools) |
 | `delete_feature` / `suppress_feature` / `reorder_feature` | edit history |
 | `set_material` | assign material |
-| `make_drawing` | create a drawing of the current part |
+| `make_drawing` | create a drawing of the current part, fitted to its sheet (see Edit, *Fitting the sheet*); say whether it fits |
 | `save` | save the current document |
 | `new_document` / `open_document` | create or open a part / assembly |
 | `close_document` | close one document (part, assembly or drawing) without saving |

@@ -43,6 +43,11 @@ Use `drawings[]` in the snapshot:
   is a warning, and critical when a requirement depends on it.
 - `drawing.surface-finish`: Ra on functional faces, plus a general finish note
 - `drawing.notes`: edge breaks, deburr, heat treatment, coating, thread standard
+- `drawing.layout`: nothing outside the frame or on the title block, no view running into another,
+  text legible (the connector's `outside_frame`, `over_title_block`, `view_*` and `views_overlap`
+  problems, and the image). Any of these is a **warning**, `drawing_edit` (lay out again, larger
+  sheet). Also a view that adds nothing (no dimension of its own, no feature the other views don't
+  show) is an `info`, `drawing_edit` "leave out view X" or "replace with section A-A".
 - `drawing.consistency`: drawing values match the snapshot model (a stale drawing is a warning).
   You judge the drawing against the **model**. When the drawing shows the model correctly but the
   model breaks the blueprint (envelope, material, a hole size), that belongs to the owning critic

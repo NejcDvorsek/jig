@@ -2,6 +2,12 @@
 
 ## Unreleased · 2026-10-29
 
+- **Drawings fit their sheet.** A drawing with anything outside the frame, on the title block or
+  running into another view is not finished. Edit's new *Fitting the sheet* lists what to do: lay
+  out again, leave out views that add nothing, combine views (section, detail, half view), go up a
+  sheet size at the same scale, and past A1 ask the engineer. The Drawing critic checks it as
+  `drawing.layout`. With sw-mcp 0.2.0, `make_drawing` and `build_drawing` do the layout and sheet
+  steps themselves and report `fit`.
 - **Snapshot in one call.** New optional connector operation `model_read`: the server derives the
   snapshot's model sections itself. SolidWorks maps it to sw-mcp's `read_model`, with the old face/edge
   recipe as the fallback for builds without it. Release this together with the `.mcp.json` pin bump to the sw-mcp release
