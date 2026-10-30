@@ -2,6 +2,9 @@
 
 *A jig holds the work and guides the tool so every part comes out right. This one does that for AI in your CAD.*
 
+<!-- Explainer video: replace this comment with the https://github.com/user-attachments/assets/... link
+     GitHub gives you when you drag docs/media/jig-explainer-small.mp4 into the web editor. -->
+
 A Claude Code plugin for mechanical engineers working in real CAD. Ask for what you need in plain
 language, like "make the mounting holes M10", "can this be milled?" or "design a bracket for 50 kg".
 The **orchestrator** picks only the steps and reviewers the request needs:
@@ -14,6 +17,8 @@ The **orchestrator** picks only the steps and reviewers the request needs:
 For new designs there is also a thought-through mode: a full spec first, then a build → review → fix
 loop until no critical flags remain. The pattern (a stateful drafter plus stateless critics) comes from
 Google's Elephant-Goldfish model.
+
+![How Jig works](docs/media/how-jig-works.png)
 
 **CAD connectors:** SolidWorks (bundled). The agents are CAD-agnostic, and more connectors can be
 added without changing them (see [Adding a connector](#adding-a-connector)).
